@@ -4,8 +4,8 @@
 import os, sys, curses
 from itertools import takewhile, dropwhile
 
-#speaker = '/usr/local/bin/speak -v brazil ' # mac os x
-speaker = '/usr/bin/espeak -v brazil ' # linux
+speaker = '/usr/local/bin/speak -v brazil ' # mac os x
+#speaker = '/usr/bin/espeak -v brazil ' # linux
 #speaker = 'say ' # mac os x (ingles)
 
 enddefinitions = False
