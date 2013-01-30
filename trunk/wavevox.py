@@ -35,6 +35,7 @@ def say(what):
 
 def help():
     say('Ajuda. Tecle ESC para sair')
+    say('Use as setas para navegar entre os sinais')
 
 def sayTime(time):
     say('Tempo ' + str(time))
