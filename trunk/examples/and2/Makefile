@@ -10,7 +10,7 @@ GHDL_FLAGS  = -fexplicit --std=02 --ieee=synopsys --warn-no-vital-generic
 GHDL_SIM_OPT = --stop-time=21us --ieee-asserts=disable
 
 #WAVEFORM_VIEWER = gtkwave
-WAVEFORM_VIEWER = ../../wavevox.py
+WAVEFORM_VIEWER = wavevox.py
 
 # Unix
 REMOVE_CMD = rm 
