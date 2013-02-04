@@ -71,12 +71,14 @@ def runSimulation(stdscr):
             else:
                 pos_time -= 1
                 sayTime(var_times[pos_time])
+                saySignal(var_names[var_keys[pos_var]], var_simulation[var_times[pos_time]][var_keys[pos_var]])
         elif tecla == curses.KEY_RIGHT:
             if pos_time == len(var_times)-1:
                 say('Final simulação')
             else:
                 pos_time += 1
                 sayTime(var_times[pos_time])
+                saySignal(var_names[var_keys[pos_var]], var_simulation[var_times[pos_time]][var_keys[pos_var]])
         else:
             say('Comando desconhecido')
     say('Até logo!')
