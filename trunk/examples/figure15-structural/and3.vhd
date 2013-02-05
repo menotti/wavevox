@@ -8,7 +8,7 @@ end and3;
 
 architecture logica of and3 is
 begin
-    y <= a and not b and not c;
+    y <= a and b and c;
 end logica;
 
 
