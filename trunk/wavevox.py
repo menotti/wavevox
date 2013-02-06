@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import os, sys, curses
 from itertools import takewhile, dropwhile
@@ -135,7 +136,7 @@ def readFile(filename):
                 continue
             elif c == '#':
                 var_simulation[time] = var_values.copy()
-                time = int(rest)
+                time = int(rest)  # FIXME erro quando rest eh vazio
                 print(var_values)
                 var_times.append(time)
             elif c in '01xXzZ':
@@ -168,4 +169,3 @@ if __name__=='__main__':
         endWindow(stdscr)
     else:
         say('Por favor, informe o nome do arquivo VCD na linha de comandos')
-
