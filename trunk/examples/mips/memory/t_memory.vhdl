@@ -1,16 +1,21 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
-use work.ufscar_memory_helpers.all;
 
 entity t_memory is
-	generic (address_width: integer := 4);
+	generic (
+		length: integer := 256;
+		address_width: integer := 4;
+		data_width: integer := 8);
 end t_memory;
 
 architecture behavioral of t_memory is
 
-component data_segment 
-		generic (address_width: integer := 32);
+component data_memory 
+		generic (
+			length: integer := 256;
+			address_width: integer := 32;
+			data_width: integer := 32);
 	
 		port (
 			address_to_read, address_to_write: 
@@ -20,10 +25,11 @@ component data_segment
 			data_out: out std_logic_vector (data_width - 1 downto 0));
 	end component;
 
-	component instructions_segment 
+	component instructions_memory 
 		generic (
+			length: integer := 256;
 			address_width: integer := 32;
-			instructions: memory_data_set);
+			data_width: integer := 32);
 	
 		port (
 			address_to_read: in std_logic_vector (address_width - 1 downto 0);
@@ -38,22 +44,20 @@ component data_segment
 			write(ln, b_vector);
 			return ln.all;
 	end;
-	
-	signal instructions: memory_data_set :=
-		(0 => (0 => '1', others => '0'), others => (others => '0')); 
+
 	signal address_to_read, address_to_write: std_logic_vector (address_width - 1 downto 0);
 signal readed_instruction, data_to_write, readed_data: 
 		std_logic_vector (data_width - 1 downto 0);
-	signal i1: std_logic_vector (data_width - 1 downto 0) := (0 => '1', others => '0');
+	signal i1: std_logic_vector (data_width - 1 downto 0) := (0 => '1', 1 => '1', others => '0');
 	signal d1: std_logic_vector (data_width - 1 downto 0) :=
 		(0 => '1', 1 => '0', 2 => '1', others => '0');
 	signal read, write: std_logic;
 
 	begin
 
-		instructions_segment1: instructions_segment generic map (address_width, instructions)
+		instructions_memory1: instructions_memory generic map (length, address_width, data_width)
 			port map (address_to_read, readed_instruction);
-		data_segment1: data_segment generic map (address_width)
+		data_memory1: data_memory generic map (length, address_width, data_width)
 			port map (address_to_read, address_to_write, data_to_write, read, write, 				readed_data);
 
 		process
