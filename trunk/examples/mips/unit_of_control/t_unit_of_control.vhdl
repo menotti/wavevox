@@ -55,8 +55,8 @@ begin
 			instruction <= "10101110000000010000000000001000";
 			wait for 100 ns;
 
-			assert destination_register = "10000";
-			assert register1 = "00001";
+			assert register1 = "10000";
+			assert register2 = "00001";
 			assert offset = "0000000000001000";
 			assert write_memory = '1';
  

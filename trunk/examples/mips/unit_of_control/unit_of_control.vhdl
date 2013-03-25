@@ -36,23 +36,33 @@ begin
 			-- Extracts the interesting values from the function field.
 			alu_operation <= instruction(2 downto 0);
 			write_register <= '1';
+			read_memory <= '0';
+			write_memory <= '0';
+			offset <= "XXXXXXXXXXXXXXXX";
 		elsif opcode = lw then -- load word operation.
 			-- Extracts the destination register.
 			destination_register <= instruction(25 downto 21);
 			-- Extracts the base register.
 			register1 <= instruction(20 downto 16);
+			register2 <= "XXXXX";
 			-- Extracts the offset.
 			offset <= instruction(15 downto 0);
 			read_memory <= '1';
 			write_register <= '1';
+			write_memory <= '0';
+			alu_operation <= "XXX";
 		elsif opcode = sw then -- store word operation.
-			-- Extracts the destination register.
-			destination_register <= instruction(25 downto 21);
+			-- Extracts the value of origin register.
+			register1 <= instruction(25 downto 21);
 			-- Extracts the base register.
-			register1 <= instruction(20 downto 16);
+			register2 <= instruction(20 downto 16);
 			-- Extracts the offset.
 			offset <= instruction(15 downto 0);
 			write_memory <= '1';
+			destination_register <= "XXXXX";
+			read_memory <= '0';
+			write_register <= '0';
+			alu_operation <= "XXX";
 			end if;  
 	end process;
 
