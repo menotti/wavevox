@@ -16,7 +16,9 @@ end register_bank;
 architecture behavioral of register_bank is
 
 	type register_set is array (0 to 31) of std_logic_vector (width - 1 downto 0); 
-	signal registers: register_set := (others => (others => '0'));
+	signal registers: register_set := 
+		(0 => (others => '0'),
+			others => (others => 'U'));
 
 begin
 
@@ -35,7 +37,9 @@ begin
 		begin
 			if write = '1' then
 				index := to_integer(unsigned(register_to_write));
-				registers(index) <= data_to_write;
+				if index /= 0 then
+					registers(index) <= data_to_write;
+				end if;
 			end if;
 		end process;
 
