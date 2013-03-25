@@ -1,7 +1,0 @@
-v 3
-file . "unit_of_control.vhdl" "20130325000620.000" "20130324212631.504":
-  entity unit_of_control at 1( 0) + 0 on 13;
-  architecture behavioral of unit_of_control at 15( 455) + 0 on 14;
-file . "t_unit_of_control.vhdl" "20130325002625.000" "20130324212631.309":
-  entity t_unit_of_control at 1( 0) + 0 on 11;
-  architecture behavioral of t_unit_of_control at 9( 138) + 0 on 12;
