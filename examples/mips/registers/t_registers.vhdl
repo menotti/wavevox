@@ -69,6 +69,20 @@ architecture behavioral of t_registers is
 			assert readed_data1 = "0110";
 			assert readed_data2 = "1000";
 
+			report "Attempting to write in register $0";
+			write <= '1';
+			register_to_write <= "00000";
+			data_to_write <= "1111";
+						wait for 100 ns;
+
+			report "Reading data from register $0";
+			register_to_read1 <= "00000";
+			register_to_read2 <= "XXXXX";
+			wait for 100 ns;
+
+			report "Data in register 1 = " & to_string(readed_data1);
+			assert readed_data1 = "0000";
+
 			wait;
 
 		end process;
