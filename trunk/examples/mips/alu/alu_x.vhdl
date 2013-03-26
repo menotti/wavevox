@@ -9,8 +9,7 @@ entity alu_x is
 	result: out std_logic_vector (width - 1 downto 0));
 end alu_x;
 
-
-architecture structural of alu_x is
+architecture behavioral of alu_x is
 
 	component and_x 
 		generic (width: integer := 32);
@@ -49,15 +48,25 @@ architecture structural of alu_x is
 		output: out std_logic_vector (width - 1 downto 0));
 end component;
 
-	signal x0, x1, x2, x3, x4, x5, x6, x7: std_logic_vector (width - 1 downto 0);
+	signal operand1, operand2, x0, x1, x2, x3, x4, x5, x6, x7: std_logic_vector (width - 1 downto 0);
+	signal selection: std_logic_vector (2 downto 0);
 
 	begin
 
-		and_x_1: and_x generic map (width) port map (a, b, x0);
-		or_x_1: or_x generic map (width) port map (a, b, x1);
-		adder: full_adder_x generic map (width) port map (a, b, x2);
-		subtractor: subtractor_x generic map (width) port map (a, b, x3);
-		slt: slt_x generic map (width) port map (a, b, x4);
-		multx: multiplexer generic map (width) port map (x0, x1, x2, x3, x4, x5, x6, x7, 			operation, result);
+		and_x_1: and_x generic map (width) port map (operand1, operand2, x0);
+		or_x_1: or_x generic map (width) port map (operand1, operand2, x1);
+		adder: full_adder_x generic map (width) port map (operand1, operand2, x2);
+		subtractor: subtractor_x generic map (width) port map (operand1, operand2, x3);
+		slt: slt_x generic map (width) port map (operand1, operand2, x4);
+		multx: multiplexer generic map (width) port map (x0, x1, x2, x3, x4, x5, x6, x7, 			selection, result);
  
-end structural;
+		process (a, b, operation)
+		begin
+			if operation /= "XXX" then
+				operand1 <= a;
+				operand2 <= b;
+				selection <= operation;
+			end if; 
+		end process;
+
+end behavioral;
