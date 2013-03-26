@@ -18,7 +18,7 @@ architecture behavioral of register_bank is
 	type register_set is array (0 to 31) of std_logic_vector (width - 1 downto 0); 
 	signal registers: register_set := 
 		(0 => (others => '0'),
-			others => (others => 'U'));
+			others => (others => 'X'));
 
 begin
 
