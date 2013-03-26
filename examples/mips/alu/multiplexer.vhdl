@@ -17,7 +17,7 @@ end multiplexer;
 
 architecture structural of multiplexer is
 
-	signal unknown: std_logic_vector (width - 1 downto 0) := (others => 'U');
+	signal unknown: std_logic_vector (width - 1 downto 0) := (others => 'X');
 
 begin
 
