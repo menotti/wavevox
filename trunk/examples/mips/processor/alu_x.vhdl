@@ -9,7 +9,6 @@ entity alu_x is
 	result: out std_logic_vector (width - 1 downto 0));
 end alu_x;
 
-
 architecture structural of alu_x is
 
 	component and_x 

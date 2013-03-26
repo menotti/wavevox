@@ -21,11 +21,11 @@ architecture behavioral of data_memory is
 	type data_sequence is array (0 to length - 1) of std_logic_vector (data_width - 1 downto 0);  
 	signal data: data_sequence :=
 		(0 => "00000000000000000000000000011001",
-		1 => (others => 'U'),
-		2 => (others => 'U'),
-		3 => (others => 'U'),
+		1 => (others => 'X'),
+		2 => (others => 'X'),
+		3 => (others => 'X'),
 		4 => "00000000000000000000000000010001",
-		others => (others => 'U'));
+		others => (others => 'X'));
 
 begin
 
