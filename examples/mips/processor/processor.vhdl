@@ -4,7 +4,8 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity processor is
 	port (clock, turn_off: in std_logic;
-		current_instruction, data_in_destination_register: out std_logic_vector (31 downto 0));
+		current_instruction, data_in_last_modified_register: 
+		out std_logic_vector (31 downto 0));
 end processor;
 
 architecture behavioral of processor is
@@ -76,18 +77,18 @@ architecture behavioral of processor is
 	signal instruction: std_logic_vector (31 downto 0);
 	signal destination_register, register1, register2: std_logic_vector (4 downto 0);
 	signal write_register, read_memory, write_memory: std_logic;
-	signal address_to_read1, address_to_read2: std_logic_vector (31 downto 0);
+	signal address_to_read, address_to_write: std_logic_vector (31 downto 0);
 	signal offset: std_logic_vector (15 downto 0);
-	signal data_from_register1, data_from_register2, data_to_write_in_register: 
-			std_logic_vector(31 downto 0);
+	signal data_from_register1, data_from_register2, data_to_write_in_register, data_from_memory, 			data_from_alu: std_logic_vector(31 downto 0);
 	signal aritmetic_and_logic_operation: std_logic_vector (2 downto 0);
 
 begin
 
-		address_to_read1 <= data_from_register1 + offset; 
-		address_to_read2 <= data_from_register2 + offset;
+		address_to_read <= data_from_register1 + offset; 
+		address_to_write <= data_from_register2 + offset;
+		data_to_write_in_register <= data_from_memory when aritmetic_and_logic_operation = "XXX" 			else data_from_alu;
 		current_instruction <= instruction;
-		data_in_destination_register <= data_to_write_in_register;
+		data_in_last_modified_register <= data_to_write_in_register;
 
 		counter: program_counter port map (clk, address_of_next_instruction);
 
@@ -95,11 +96,11 @@ begin
 
 		control: unit_of_control port map (instruction, destination_register, register1, 			register2, write_register, 			aritmetic_and_logic_operation, 			read_memory, write_memory, offset);
 
-		bank_of_registers: register_bank port map (register1, register2, destination_register, 			write_register, 			data_to_write_in_register, data_from_register1, 			data_from_register2);  
+		bank_of_registers: register_bank port map (register1, register2, destination_register, 			write_register, data_to_write_in_register, data_from_register1, data_from_register2);  
 
-		memory_of_data : data_memory port map (address_to_read1, address_to_read2, 			data_from_register1, read_memory, write_memory, data_to_write_in_register);     
+		memory_of_data : data_memory port map (address_to_read, address_to_write, 			data_from_register1, read_memory, write_memory, data_from_memory);     
 
-		alu: alu_x port map (data_from_register1, data_from_register2, aritmetic_and_logic_operation, data_to_write_in_register);
+		alu: alu_x port map (data_from_register1, data_from_register2, 			aritmetic_and_logic_operation, data_from_alu);
 
 		process (clock, turn_off)
 		begin

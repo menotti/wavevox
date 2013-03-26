@@ -29,6 +29,12 @@ architecture behavioral of instructions_memory is
 		-- add $t2, $t0, $t1
 		2 => "00000001010010000100100000000010",
 
+		-- sw $t2, 8 ($0)
+		3 => "10101101010000000000000000001000",
+
+		--lw $t4, 8 ($0)
+		4 => "10001101100000000000000000001000",
+
 		-- End of instructions.
 		others => (others => 'U'));
 
