@@ -11,7 +11,7 @@ architecture behavioral of t_program_counter is
 	component program_counter 
 		generic (address_width: integer := 32);
 		port (
-			clock, write_enable: in std_logic;
+			clock, enable: in std_logic;
 			next_address: out std_logic_vector (address_width - 1 downto 0));
 	end component;
 
@@ -25,14 +25,14 @@ architecture behavioral of t_program_counter is
 	end;
 
 	signal clock: std_logic := '0';
-	signal write_enable: std_logic := '0';
+	signal enable: std_logic := '0';
 	signal address: std_logic_vector (address_width - 1 downto 0);
 	constant period: time := 10 ns;
 
 begin
 
 		counter: program_counter generic map (address_width)
-			port map (clock, write_enable, address);
+			port map (clock, enable, address);
 
 		clock_process: process
 		begin
@@ -46,11 +46,11 @@ begin
 		begin
 			report "Starting test bench";
 
-			write_enable <= '1';
+			enable <= '1';
 
 			for i in 0 to 16 loop
 			if i rem 2 = 0 then
-					write_enable <= not write_enable;
+					enable <= not enable;
 				end if;
 
 				report to_string(address);

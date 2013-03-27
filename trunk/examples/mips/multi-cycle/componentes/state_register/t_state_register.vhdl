@@ -21,16 +21,24 @@ architecture behavioral of t_state_register is
 		generic (width: integer := 32);
 		port (
 			input: in std_logic_vector (width - 1 downto 0);
+			clock: in std_logic;
 			write_enable: in std_logic;
 			output: out std_logic_vector (width - 1 downto 0));
 	end component;
 
 	signal input, output: std_logic_vector (width - 1 downto 0);
 	signal write_enable: std_logic;
+	signal clock: std_logic := '0';
 
 begin
 
-		register1: state_register generic map (width) port map (input, write_enable, output);
+		register1: state_register generic map (width) port map (input, clock, write_enable, output);
+
+		clock_gen: process
+		begin
+			clock <= not clock;
+			wait for 10 ns;
+		end process;
 
 		process
 		begin
