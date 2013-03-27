@@ -17,6 +17,7 @@ architecture behavioral of state_register is
 
 begin
 
+	output <= stored_data;
 
 	write: process (clock)
 	begin
@@ -26,8 +27,6 @@ begin
 			end if;
 		end if;
 	end process;
-
-	output <= stored_data;
 
 end behavioral;
 
