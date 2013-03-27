@@ -18,7 +18,7 @@ begin
 
 	next_address <= current_address;
 
-		process (clock, enable)
+		process (clock)
 		begin
 			if rising_edge(clock) then
 				if enable = '1' and current_address /= maximum_address then

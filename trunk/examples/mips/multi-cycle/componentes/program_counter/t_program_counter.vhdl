@@ -36,10 +36,8 @@ begin
 
 		clock_process: process
 		begin
-			clock <= '0';
-			wait for period /2;
-			clock <= '1';
 			wait for period / 2;
+			clock <= not clock;
 		end process;
 
 		stimulus: process
@@ -48,7 +46,9 @@ begin
 
 			enable <= '1';
 
-			for i in 0 to 16 loop
+			wait for period / 2;
+
+			for i in 0 to 10 loop
 			if i rem 2 = 0 then
 					enable <= not enable;
 				end if;
