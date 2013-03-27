@@ -5,7 +5,7 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 entity program_counter is
 	generic (address_width: integer := 32);
 	port (
-		clock, write_enable: in std_logic;
+		clock, enable: in std_logic;
 		next_address: out std_logic_vector (address_width - 1 downto 0));
 end program_counter;
 
@@ -18,11 +18,12 @@ begin
 
 	next_address <= current_address;
 
-		process (clock, write_enable)
+		process (clock, enable)
 		begin
-			if rising_edge(clock) and write_enable = '1' and 
-			current_address /= maximum_address then
-				current_address <= current_address + '1';
+			if rising_edge(clock) then
+				if enable = '1' and current_address /= maximum_address then
+					current_address <= current_address + '1';
+				end if;
 			end if;
 		end process;
 
