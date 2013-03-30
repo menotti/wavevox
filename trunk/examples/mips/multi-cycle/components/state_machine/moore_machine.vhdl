@@ -34,6 +34,8 @@ architecture behavioral of moore_machine is
 	end;
 
 begin
+	-- Extracts the opcode from the instruction.
+	opcode <= instruction(31 downto 26);
 
 	next_state: process(clock)
 	begin
@@ -93,12 +95,10 @@ begin
 				-- instruction decode and source register fetch
 				enable_instruction_register <= '0';
 				enable_register_a_and_b <= '1';
-				-- Extracts the opcode from the instruction.
-				opcode <= instruction(31 downto 26);
 
 				if opcode = lw then
 					-- Extracts the base register.
-					register1 <= instruction(20 downto 16);
+					register1 <= instruction (20 downto 16);
 					register2 <= "XXXXX";
 				elsif opcode = sw then
 					-- Extracts the value of origin register.
@@ -134,6 +134,7 @@ begin
 				offset <= "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 				alu_operation <= "XXX";
 				write_memory <= '1';
+				enable_program_counter <= '1';
 
 			when s5 =>
 				-- load memory conclusion
