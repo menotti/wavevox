@@ -7,10 +7,10 @@ entity moore_machine is
 	port (
 		clock: in std_logic;
 		instruction: in std_logic_vector (31 downto 0);
-		enable_program_counter, enable_instruction_register, enable_register_a_and_b,
-			enable_alu_register, enable_data_memory_register: out std_logic;
+		enable_program_counter, enable_instruction_register, enable_alu_input_registers,
+			enable_alu_output_register, enable_data_memory_register: out std_logic;
 		destination_register, register1, register2: out std_logic_vector (4 downto 0);
-		write_register: out std_logic;
+		write_register, source_alu: out std_logic;
 		alu_operation: out std_logic_vector (2 downto 0);
 		read_memory, write_memory: out std_logic;
 		offset: out std_logic_vector (31 downto 0));
@@ -94,14 +94,14 @@ begin
 			when s1 =>
 				-- instruction decode and source register fetch
 				enable_instruction_register <= '0';
-				enable_register_a_and_b <= '1';
+				enable_alu_input_registers <= '1';
 
 				if opcode = lw then
-					-- Extracts the base register.
-					register1 <= instruction (20 downto 16);
-					register2 <= "XXXXX";
+					register1 <= "XXXXX";
+					-- Extracts the base register. 
+					register2 <= instruction (20 downto 16);
 				elsif opcode = sw then
-					-- Extracts the value of origin register.
+					-- Extracts the value of source register.
 					register1 <= instruction(25 downto 21);
 					-- Extracts the base register.
 					register2 <= instruction(20 downto 16);
@@ -114,15 +114,15 @@ begin
 
 			when s2 =>
 				-- memory address computation
-				enable_register_a_and_b <= '0';
-				enable_alu_register <= '1';
+				enable_alu_input_registers <= '0';
+				enable_alu_output_register <= '1';
 				-- Extracts the offset.
 				offset <= extend_to_32(instruction(15 downto 0));
 				alu_operation <= "010";
 
 			when s3 =>
 				-- load memory access
-				enable_alu_register <= '0';
+				enable_alu_output_register <= '0';
 				offset <= "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 				alu_operation <= "XXX";
 				enable_data_memory_register <= '1';
@@ -130,7 +130,7 @@ begin
 
 			when s4 =>
 				-- store memory access
-				enable_alu_register <= '0';
+				enable_alu_output_register <= '0';
 				offset <= "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
 				alu_operation <= "XXX";
 				write_memory <= '1';
@@ -142,21 +142,26 @@ begin
 				-- Extracts the destination register.
 				destination_register <= instruction(25 downto 21);
 				write_register <= '1';
+				-- Selects the data memory register as the source for write operation.
+				source_alu <= '0';
 				enable_program_counter <= '1';
 
 			when s6 =>
 				-- aritmetic and logic operation execution
-				enable_register_a_and_b <= '0';
-				enable_alu_register <= '1';
+				enable_alu_input_registers <= '0';
+				enable_alu_output_register <= '1';
 				-- Extracts the interesting values from the function field.
 				alu_operation <= instruction(2 downto 0);
 
 			when s7 =>
 				-- aritmetic and logic operation conclusion
-				enable_alu_register <= '0';
+				enable_alu_output_register <= '0';
 				alu_operation <= "XXX";
 				-- Extracts the destination register.
 				destination_register <= instruction(25 downto 21);
+				write_register <= '1';
+				-- Selects the alu output register as the source for write operation.
+				source_alu <= '1'; 
 				enable_program_counter <= '1';
 
 		end case;
