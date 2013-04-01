@@ -110,6 +110,7 @@ begin
 					register2 <= instruction(20 downto 16);
 				elsif opcode = r then
 					-- Extracts the "left hand side" register.
+report "";
 					register1 <= instruction(20 downto 16);
 					-- Extracts the "right hand side" register.
 					register2 <= instruction(15 downto 11);
