@@ -6,8 +6,8 @@ entity state_register is
 	generic (width: integer := 32);
 	port (
 		clock: in std_logic;
-		write_enable: in std_logic;
 		input: in std_logic_vector (width - 1 downto 0);
+		write_enable: in std_logic;
 		output: out std_logic_vector (width - 1 downto 0));
 end state_register;
 

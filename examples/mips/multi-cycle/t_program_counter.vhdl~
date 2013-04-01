@@ -1,0 +1,63 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity t_program_counter is
+	generic (address_width: integer := 4);
+end t_program_counter;
+
+architecture behavioral of t_program_counter is
+
+	component program_counter 
+		generic (address_width: integer := 32);
+		port (
+			clock, write_enable: in std_logic;
+			next_address: out std_logic_vector (address_width - 1 downto 0));
+	end component;
+
+	function to_string (signal sl_vector: std_logic_vector) return string is
+	use std.textio.all; 
+	variable b_vector: bit_vector (sl_vector'range) := to_bitvector(sl_vector);
+	variable ln: line;
+	begin
+		write(ln, b_vector);
+		return ln.all;
+	end;
+
+	signal clock: std_logic := '0';
+	signal write_enable: std_logic := '0';
+	signal address: std_logic_vector (address_width - 1 downto 0);
+	constant period: time := 10 ns;
+
+begin
+
+		counter: program_counter generic map (address_width)
+			port map (clock, write_enable, address);
+
+		clock_process: process
+		begin
+			clock <= '0';
+			wait for period /2;
+			clock <= '1';
+			wait for period / 2;
+		end process;
+
+		stimulus: process
+		begin
+			report "Starting test bench";
+
+			write_enable <= '1';
+
+			for i in 0 to 16 loop
+			if i = 4 then
+					write_enable <= '0';
+				end if;
+
+				report to_string(address);
+				wait for period;
+			end loop;
+
+			wait;
+		end process;
+
+end behavioral;

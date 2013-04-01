@@ -15,7 +15,8 @@ architecture behavioral of t_moore_machine is
 			enable_program_counter, enable_instruction_register, enable_alu_input_registers,
 				enable_alu_output_register, enable_data_memory_register: out std_logic;
 			destination_register, register1, register2: out std_logic_vector (4 downto 0);
-			write_register, source_alu: out std_logic;
+			write_register, source_memory: out std_logic;
+			source_alu: out std_logic;
 			alu_operation: out std_logic_vector (2 downto 0);
 			read_memory, write_memory: out std_logic;
 			offset: out std_logic_vector (31 downto 0));
@@ -26,7 +27,7 @@ architecture behavioral of t_moore_machine is
 	signal instruction: std_logic_vector (31 downto 0);
 	signal state_elements: std_logic_vector (4 downto 0);
 	signal destination_register, register1, register2: std_logic_vector (4 downto 0);
-	signal write_register, source_alu, read_memory, write_memory: std_logic;
+	signal write_register, source_memory, source_alu, read_memory, write_memory: std_logic;
 	signal alu_operation: std_logic_vector (2 downto 0);
 	signal offset: std_logic_vector (31 downto 0);
 
@@ -52,19 +53,17 @@ architecture behavioral of t_moore_machine is
 
 begin
 
-	machine: moore_machine port map (clock, instruction, state_elements(0), state_elements(1), 		state_elements(2), state_elements(3), state_elements(4), destination_register, 		register1, register2, write_register, source_alu, alu_operation, read_memory, write_memory, 		offset);  
+	machine: moore_machine port map (clock, instruction, state_elements(0), state_elements(1), 		state_elements(2), state_elements(3), state_elements(4), destination_register, 		register1, register2, write_register, source_memory, source_alu, alu_operation, read_memory, write_memory, 		offset);  
 
 		clock_process: process
 		begin
-			wait for period / 2;
 			clock <= not clock;
+			wait for period / 2;
 		end process;
 
 		stimulus: process
 		begin
 			report "Starting test bench";
-
-			wait for period / 2; -- first rising edge
 
 			report "Verifing a load memory instruction";
 
@@ -93,7 +92,7 @@ begin
 			-- state 4
 			assert_that_correct_state_element_is_enabled(0);
 			assert write_register = '1';
-			assert source_alu = '0';
+			assert source_memory = '1';
 			assert destination_register = "00011";
 
 			report "Verifing an aritmetic and logic operation";
@@ -112,12 +111,13 @@ begin
 			-- state 2 
 			assert_that_correct_state_element_is_enabled(3);
 			assert alu_operation = "001";
+			assert source_alu = '1';
 
 			wait for period;
 			-- state 3 
 			assert_that_correct_state_element_is_enabled(0);
 			assert write_register = '1';
-			assert source_alu = '1';
+			assert source_memory = '0';
 			assert destination_register = "00010";
 
 			report "Verifing a store memory operation";

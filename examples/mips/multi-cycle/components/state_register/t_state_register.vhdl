@@ -20,9 +20,9 @@ architecture behavioral of t_state_register is
 	component state_register 
 		generic (width: integer := 32);
 		port (
-			input: in std_logic_vector (width - 1 downto 0);
 			clock: in std_logic;
 			write_enable: in std_logic;
+			input: in std_logic_vector (width - 1 downto 0);
 			output: out std_logic_vector (width - 1 downto 0));
 	end component;
 
@@ -32,7 +32,7 @@ architecture behavioral of t_state_register is
 
 begin
 
-		register1: state_register generic map (width) port map (input, clock, write_enable, output);
+		register1: state_register generic map (width) port map (clock, write_enable, input, 			output);
 
 		clock_gen: process
 		begin
