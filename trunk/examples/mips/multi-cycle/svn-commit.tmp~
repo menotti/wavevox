@@ -1,6 +1,0 @@
-
---Esta linha, e as abaixo, serão ignoradas--
-
-M    componentes/state_register/state_register.vhdl
-D    componentes/state_machine/state_machine.vhdl
-A    componentes/state_machine/moore_machine.vhdl
