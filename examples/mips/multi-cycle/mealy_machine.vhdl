@@ -123,6 +123,7 @@ begin
 			when s5 =>
 				-- load memory conclusion
 				enable_data_memory_register <= '0';
+				read_memory <= '0';
 				-- Extracts the destination register.
 				destination_register <= instruction(25 downto 21);
 				write_register <= '1';
