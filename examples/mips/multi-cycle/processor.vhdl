@@ -37,7 +37,7 @@ architecture behavioral of processor is
 			instruction_out: out std_logic_vector (data_width - 1 downto 0));
 	end component;
 
-	component moore_machine 
+	component mealy_machine 
 		port (
 			clock: in std_logic;
 			instruction: in std_logic_vector (31 downto 0);
@@ -126,7 +126,7 @@ begin
 
 		instruction_register: state_register port map (clk, enable_instruction_register, 			instruction, data_from_instruction_register); 
 
-		state_machine: moore_machine port map (clk, data_from_instruction_register, 			enable_program_counter, enable_instruction_register, enable_alu_input_registers, 			enable_alu_output_register, enable_data_memory_register, destination_register, 			register1, register2, write_register, source_memory, source_alu, alu_operation, 			read_memory, write_memory, offset); 
+		state_machine: mealy_machine port map (clk, data_from_instruction_register, 			enable_program_counter, enable_instruction_register, enable_alu_input_registers, 			enable_alu_output_register, enable_data_memory_register, destination_register, 			register1, register2, write_register, source_memory, source_alu, alu_operation, 			read_memory, write_memory, offset); 
 
 		bank_of_registers: register_bank port map (register1, register2, destination_register, 			write_register, data_to_write_in_register, data_from_register1, data_from_register2);  
 
