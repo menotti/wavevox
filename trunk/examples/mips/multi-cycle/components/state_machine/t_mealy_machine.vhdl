@@ -2,13 +2,13 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
-entity t_moore_machine is
+entity t_mealy_machine is
 
-end t_moore_machine;
+end t_mealy_machine;
 
-architecture behavioral of t_moore_machine is
+architecture behavioral of t_mealy_machine is
 
-	component moore_machine 
+	component mealy_machine 
 		port (
 			clock: in std_logic;
 			instruction: in std_logic_vector (31 downto 0);
@@ -53,7 +53,7 @@ architecture behavioral of t_moore_machine is
 
 begin
 
-	machine: moore_machine port map (clock, instruction, state_elements(0), state_elements(1), 		state_elements(2), state_elements(3), state_elements(4), destination_register, 		register1, register2, write_register, source_memory, source_alu, alu_operation, read_memory, write_memory, 		offset);  
+	machine: mealy_machine port map (clock, instruction, state_elements(0), state_elements(1), 		state_elements(2), state_elements(3), state_elements(4), destination_register, 		register1, register2, write_register, source_memory, source_alu, alu_operation, read_memory, write_memory, 		offset);  
 
 		clock_process: process
 		begin
@@ -67,11 +67,10 @@ begin
 
 			report "Verifing a load memory instruction";
 
-			instruction <= "10001100011000010000000000000011";
-
 			wait for period;
 			-- state 0
 			assert_that_correct_state_element_is_enabled(1);
+			instruction <= "10001100011000010000000000000011";
 			wait for period;
 			-- state 1 
 			assert_that_correct_state_element_is_enabled(2);
@@ -96,11 +95,11 @@ begin
 			assert destination_register = "00011";
 
 			report "Verifing an aritmetic and logic operation";
-			instruction <= "00000000010101010000100000000001";
 
 			wait for period;
 			-- state 0
 			assert_that_correct_state_element_is_enabled(1);
+			instruction <= "00000000010101010000100000000001";
 			wait for period;
 			-- state 1 
 			assert_that_correct_state_element_is_enabled(2);
@@ -121,11 +120,11 @@ begin
 			assert destination_register = "00010";
 
 			report "Verifing a store memory operation";
-			instruction <= "10101100011000010000000000000001";
 
 			wait for period;
 			-- state 0
 			assert_that_correct_state_element_is_enabled(1);
+			instruction <= "10101100011000010000000000000001";
 
 			wait for period;
 			-- state 1 
@@ -143,6 +142,35 @@ begin
 			-- state 3
 			assert_that_correct_state_element_is_enabled(0);
 			assert write_memory = '1';
+
+			report "Verifing a load memory instruction";
+
+			wait for period;
+			-- state 0
+			assert_that_correct_state_element_is_enabled(1);
+			instruction <= "10001100011000010000000000000011";
+			wait for period;
+			-- state 1 
+			assert_that_correct_state_element_is_enabled(2);
+			assert register2 = "00001";
+
+			wait for period;
+			-- state 2
+			assert_that_correct_state_element_is_enabled(3);
+			assert offset = "00000000000000000000000000000011";
+			assert alu_operation = "010";
+
+			wait for period;
+			-- state 3
+			assert_that_correct_state_element_is_enabled(4);
+			assert read_memory = '1';
+
+			wait for period;
+			-- state 4
+			assert_that_correct_state_element_is_enabled(0);
+			assert write_register = '1';
+			assert source_memory = '1';
+			assert destination_register = "00011";
 
 			wait;
 		end process;
