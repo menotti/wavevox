@@ -6,6 +6,8 @@ entity program_counter is
 	generic (address_width: integer := 32);
 	port (
 		clock: in std_logic;
+		load: in std_logic;
+		load_address: in std_logic_vector (address_width - 1 downto 0);
 		next_address: out std_logic_vector (address_width - 1 downto 0));
 end program_counter;
 
@@ -20,8 +22,12 @@ begin
 
 		process (clock)
 		begin
-			if rising_edge(clock) and current_address /= maximum_address then
-				current_address <= current_address + '1';
+			if rising_edge(clock) then
+				if load = '1' then
+					current_address <= load_address;
+				elsif current_address /= maximum_address then
+					current_address <= current_address + '1';
+				end if;
 			end if;
 		end process;
 

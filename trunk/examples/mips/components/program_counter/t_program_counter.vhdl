@@ -12,6 +12,8 @@ architecture behavioral of t_program_counter is
 		generic (address_width: integer := 32);
 		port (
 			clock: in std_logic;
+			load: in std_logic;
+			load_address: in std_logic_vector (address_width - 1 downto 0);
 			next_address: out std_logic_vector (address_width - 1 downto 0));
 	end component;
 
@@ -25,13 +27,15 @@ architecture behavioral of t_program_counter is
 	end;
 
 	signal clock: std_logic := '0';
+	signal load: std_logic := '0';
 	signal address: std_logic_vector (address_width - 1 downto 0);
+	signal load_address: std_logic_vector (address_width - 1 downto 0);
 	constant period: time := 10 ns;
 
 begin
 
 		counter: program_counter generic map (address_width)
-			port map (clock, address);
+			port map (clock, load, load_address, address);
 
 		clock_process: process
 		begin
@@ -45,9 +49,17 @@ begin
 		begin
 			report "Starting test bench";
 
+			load_address <= "1010";
+
 			for i in 0 to 16 loop
 				report to_string(address);
 				wait for period;
+				if i = 12 then
+					load <= '1';
+					report "Load!";
+				else
+					load <= '0';
+				end if;
 			end loop;
 
 			wait;
