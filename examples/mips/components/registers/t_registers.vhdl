@@ -10,7 +10,7 @@ architecture behavioral of t_registers is
 
 	signal register_to_read1, register_to_read2, register_to_write: std_logic_vector (4 downto 0);
 	signal data_to_write, readed_data1, readed_data2: std_logic_vector (width - 1 downto 0);
-	signal write: std_logic;
+	signal swrite: std_logic;
 
 	function to_string (signal sl_vector: std_logic_vector) return string is
 	use std.textio.all; 
@@ -33,7 +33,7 @@ architecture behavioral of t_registers is
 
 	begin
 
-		register_bank1: register_bank generic map (width) port map (register_to_read1, 			register_to_read2, register_to_write, write, data_to_write, readed_data1, 			readed_data2);  
+		register_bank1: register_bank generic map (width) port map (register_to_read1, 			register_to_read2, register_to_write, swrite, data_to_write, readed_data1, 			readed_data2);  
 
 		process
 
@@ -41,7 +41,7 @@ architecture behavioral of t_registers is
 
 			report "Starting test bench";
 
-			write <= '1';
+			swrite <= '1';
 			register_to_write <= "00011";
 			data_to_write <= "0110";
 			wait for 100 ns;
@@ -49,7 +49,7 @@ architecture behavioral of t_registers is
 						report "Writing " & to_string(data_to_write) & 
 				" to register " & to_string(register_to_write);
 
-			write <= '1';
+			swrite <= '1';
 			register_to_write <= "00110";
 			data_to_write <= "1000";
 			wait for 100 ns;
@@ -70,7 +70,7 @@ architecture behavioral of t_registers is
 			assert readed_data2 = "1000";
 
 			report "Attempting to write in register $0";
-			write <= '1';
+			swrite <= '1';
 			register_to_write <= "00000";
 			data_to_write <= "1111";
 						wait for 100 ns;
