@@ -1,0 +1,1 @@
+WaveVox é um leitor de arquivos .VCD para deficientes visuais escrito em Pyhton
